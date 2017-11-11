@@ -1,0 +1,22 @@
+{
+  "name": "lay-the-eggs",
+  "version": "1.0.0",
+  "description": "gotta lay them eggs",
+  "main": "index.js",
+  "repository": "https://github.com/baovuong/lay-the-eggs.git",
+  "author": "Bao Vuong",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  },
+  "dependencies": {
+    "box2d-es6": "^1.0.2"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/webpack",
+    "dev": "node_modules/.bin/webpack-dev-server"
+  }
+}
