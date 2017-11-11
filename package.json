@@ -1,0 +1,12 @@
+{
+  "name": "lay-the-eggs",
+  "version": "1.0.0",
+  "description": "gotta lay them eggs",
+  "main": "index.js",
+  "repository": "https://github.com/baovuong/lay-the-eggs.git",
+  "author": "Bao Vuong",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
