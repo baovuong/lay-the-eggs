@@ -1,6 +1,7 @@
 /* import styles */
-import Box2D from 'box2d-es6';
 require('../css/app.css');
+
+import Box2D from 'box2d-es6';
 
 var b2Vec2 = Box2D.Common.Math.b2Vec2,
   b2BodyDef = Box2D.Dynamics.b2BodyDef,
