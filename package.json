@@ -7,9 +7,15 @@
   "author": "Bao Vuong",
   "license": "MIT",
   "devDependencies": {
-    "webpack": "^3.8.1"
+    "css-loader": "^0.28.7",
+    "style-loader": "^0.19.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
     "box2d-es6": "^1.0.2"
+  },
+  "scripts": {
+    "dev": "node_modules/.bin/webpack-dev-server"
   }
 }
