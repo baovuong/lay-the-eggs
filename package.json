@@ -7,7 +7,7 @@
   "author": "Bao Vuong",
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "webpack": "^3.8.1"
   },
   "dependencies": {
     "box2d-es6": "^1.0.2"
