@@ -16,6 +16,7 @@
     "box2d-es6": "^1.0.2"
   },
   "scripts": {
+    "build": "node_modules/.bin/webpack",
     "dev": "node_modules/.bin/webpack-dev-server"
   }
 }
