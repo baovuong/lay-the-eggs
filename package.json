@@ -8,5 +8,8 @@
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.9.1"
+  },
+  "dependencies": {
+    "box2d-es6": "^1.0.2"
   }
 }

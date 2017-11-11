@@ -52,6 +52,10 @@ beeper@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/beeper/-/beeper-1.1.1.tgz#e6d5ea8c5dad001304a70b22638447f69cb2f809"
 
+box2d-es6@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/box2d-es6/-/box2d-es6-1.0.2.tgz#2d7fb5a82a802bd7d75e642c1bb112af75c912ed"
+
 brace-expansion@^1.0.0:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
