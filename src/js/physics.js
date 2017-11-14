@@ -220,3 +220,13 @@ export class Nest extends Platform {
   render(ctx, scale) {
   }
 }
+
+export class World {
+  constructor() {
+
+  }
+
+  init() {
+    
+  }
+}
