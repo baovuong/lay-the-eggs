@@ -56,8 +56,8 @@ var numRegular = 0;
 
 
 function init() {
-  world = new physics.b2World(new physics.b2Vec2(0, 50),true);
-
+  world = new physics.World(0, 50);
+  
   window.onresize=function() {
     bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
     scale = Math.max(1, Math.max(bgCanvas.width, bgCanvas.height)/100);
@@ -71,10 +71,10 @@ function init() {
     }
     bgObjects = new Array();
 
-    bgObjects.push(new physics.Platform(world, bgCanvas.width, 0.1, 0, (bgCanvas.height-2)/scale));
-    bgObjects.push(new physics.Platform(world, bgCanvas.width, 0.1, 0, 0));
-    bgObjects.push(new physics.Platform(world, 0.1, bgCanvas.height, 0, 0));
-    bgObjects.push(new physics.Platform(world, 0.1, bgCanvas.height, (bgCanvas.width-2)/scale, 0));
+    bgObjects.push(new physics.Platform(world.body, bgCanvas.width, 0.1, 0, (bgCanvas.height-2)/scale));
+    bgObjects.push(new physics.Platform(world.body, bgCanvas.width, 0.1, 0, 0));
+    bgObjects.push(new physics.Platform(world.body, 0.1, bgCanvas.height, 0, 0));
+    bgObjects.push(new physics.Platform(world.body, 0.1, bgCanvas.height, (bgCanvas.width-2)/scale, 0));
     //for (var i=0; i<bgObjects.length; i++) {
     //    bgObjects[i].render(bgCtx, scale);
     //}

@@ -222,11 +222,15 @@ export class Nest extends Platform {
 }
 
 export class World {
-  constructor() {
-
+  constructor(gX, gY, scale) {
+    this.body = new b2World(new b2Vec2(gX, gY),true);
   }
 
   init() {
     
+  }
+
+  refresh(scale) {
+
   }
 }
