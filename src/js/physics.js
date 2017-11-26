@@ -80,6 +80,7 @@ export class CachedImageBall {
     constructor(cachedImage, scale) {
         this.body = null;
         this.image = cachedImage;
+        this.scale = scale;
     }
 
     attachToWorld(world, x, y) {
@@ -96,8 +97,8 @@ export class CachedImageBall {
         var vectors = new Array();
         var angle = Math.PI / 3;
 
-        var width = this.image.canvas.width / (scale * 2);
-        var height = this.image.canvas.height / (scale * 2);
+        var width = this.image.canvas.width / (this.scale * 2);
+        var height = this.image.canvas.height / (this.scale * 2);
 
         var mh = height * Math.sin(angle);
         var mw = width * Math.cos(angle);
@@ -229,16 +230,21 @@ export class Nest extends Platform {
 }
 
 export class World {
-    constructor(gX, gY, scale, width, height) {
+    constructor(gX, gY) {
         this.body = new b2World(new b2Vec2(gX, gY), true);
-        this.maxVelocity = new b2Vec2(0.2 * width * 2, 0.2 * height * 0.1).Length();
         this.bgObjects = new Array();
         this.fgObjects = new Array();
     }
 
-    addObject(object, x, y) {
-        this.fgObjects.add(object);
+    addObject(object, x, y, fx, fy, t) {
+        this.fgObjects.push(object);
         object.attachToWorld(this.body, x, y);
+
+        var force = new b2Vec2(fx, fy);
+        object.body.ApplyImpulse(force, object.body.GetWorldCenter());
+        object.body.ApplyTorque(t);
+
+        return force;
     }
 
     init() {
@@ -246,15 +252,15 @@ export class World {
     }
 
     refresh(scale, width, height) {
-        for (var i = 0; i < bgObjects.length; i++) {
-            this.bgObjects[i].body.GetWorld().DestroyBody(bgObjects[i].body);
+        for (var i = 0; i < this.bgObjects.length; i++) {
+            this.bgObjects[i].body.GetWorld().DestroyBody(this.bgObjects[i].body);
         }
         this.bgObjects = new Array();
 
-        this.bgObjects.push(new Platform(world.body, bgCanvas.width, 0.1, 0, (bgCanvas.height - 2) / scale));
-        this.bgObjects.push(new Platform(world.body, bgCanvas.width, 0.1, 0, 0));
-        this.bgObjects.push(new Platform(world.body, 0.1, bgCanvas.height, 0, 0));
-        this.bgObjects.push(new Platform(world.body, 0.1, bgCanvas.height, (bgCanvas.width - 2) / scale, 0));
+        this.bgObjects.push(new Platform(this.body, width, 0.1, 0, (height - 2) / scale));
+        this.bgObjects.push(new Platform(this.body, width, 0.1, 0, 0));
+        this.bgObjects.push(new Platform(this.body, 0.1, height, 0, 0));
+        this.bgObjects.push(new Platform(this.body, 0.1, height, (width - 2) / scale, 0));
     }
 
     update(ctx, width, height, scale) {

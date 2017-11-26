@@ -66,20 +66,9 @@ function init() {
         fgCanvas.width = bgCanvas.width;
         fgCanvas.height = bgCanvas.height;
         maxVelocity = new physics.b2Vec2(0.2 * fgCanvas.width * 2, 0.2 * fgCanvas.height * 0.1).Length();
-        for (var i = 0; i < bgObjects.length; i++) {
-            bgObjects[i].body.GetWorld().DestroyBody(bgObjects[i].body);
-        }
-        bgObjects = new Array();
 
-        bgObjects.push(new physics.Platform(world.body, bgCanvas.width, 0.1, 0, (bgCanvas.height - 2) / scale));
-        bgObjects.push(new physics.Platform(world.body, bgCanvas.width, 0.1, 0, 0));
-        bgObjects.push(new physics.Platform(world.body, 0.1, bgCanvas.height, 0, 0));
-        bgObjects.push(new physics.Platform(world.body, 0.1, bgCanvas.height, (bgCanvas.width - 2) / scale, 0));
-        //for (var i=0; i<bgObjects.length; i++) {
-        //    bgObjects[i].render(bgCtx, scale);
-        //}
+        world.refresh(scale, bgCanvas.width, bgCanvas.height);
 
-        // rendering background
         bgCtx.drawImage(backgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
 
@@ -123,13 +112,13 @@ function init() {
             numRegular++;
         }
         //newEgg = new ImageBall(world, newEggImage, 24/scale, 32/scale, henX/scale, henY/scale);
-        newEgg = new physics.CachedImageBall(world, newEggImage, henX / scale, henY / scale, scale);
-        fgObjects.push(newEgg);
-
-        var force = new physics.b2Vec2(misc.randInt(10, 0.2 * fgCanvas.width * 2) * scale, misc.randInt(5, 0.2 * fgCanvas.height * 0.1));
-
-        newEgg.body.ApplyImpulse(force, newEgg.body.GetWorldCenter());
-        newEgg.body.ApplyTorque(misc.randInt(500, 5000) * scale);
+        newEgg = new physics.CachedImageBall(newEggImage, scale);
+        var force = world.addObject(newEgg,
+            henX/scale,
+            henY/scale,
+            misc.randInt(10, 0.2 * fgCanvas.width * 2),
+            misc.randInt(5, 0.2 * fgCanvas.height * 0.1),
+            misc.randInt(500, 5000) * scale);
 
         if (force.Length() >= maxVelocity * 0.45) {
             cannonSound.currentTime = 0;
@@ -140,34 +129,20 @@ function init() {
         }
     });
     //setup debug draw
-    var debugDraw = new physics.b2DebugDraw();
-    debugDraw.SetSprite(fgCtx);
-    debugDraw.SetDrawScale(30.0);
-    debugDraw.SetFillAlpha(0.5);
-    debugDraw.SetAlpha(0.5);
-    debugDraw.SetLineThickness(3.0);
-    debugDraw.SetFlags(physics.b2DebugDraw.e_shapeBit | physics.b2DebugDraw.e_jointBit);
-    world.SetDebugDraw(debugDraw);
+    // var debugDraw = new physics.b2DebugDraw();
+    // debugDraw.SetSprite(fgCtx);
+    // debugDraw.SetDrawScale(30.0);
+    // debugDraw.SetFillAlpha(0.5);
+    // debugDraw.SetAlpha(0.5);
+    // debugDraw.SetLineThickness(3.0);
+    // debugDraw.SetFlags(physics.b2DebugDraw.e_shapeBit | physics.b2DebugDraw.e_jointBit);
+    // world.SetDebugDraw(debugDraw);
 
     window.setInterval(update, 1000 / 60);
 }
 
 function update() {
-    fgCtx.clearRect(0, 0, fgCanvas.width, fgCanvas.height);
-
-
-
-    world.Step(1 / 60, 10, 10);
-    //world.DrawDebugData();
-    for (var i = 0; i < fgObjects.length; i++) {
-        fgObjects[i].render(fgCtx, scale);
-    }
-    world.ClearForces();
-
-    // drawing the chicken
-    fgCtx.save();
-    //fgCtx.translate(henX, henY);
-
+    world.update(fgCtx, fgCanvas.width, fgCanvas.height, scale);
     // optimized
     fgCtx.translate(misc.round(henX), misc.round(henY));
     fgCtx.drawImage(henImage.canvas, -1 * henWidth, -1 * henHeight);
