@@ -2,35 +2,35 @@
 require('../css/app.css');
 var misc = require('./misc.js');
 var physics = require('./physics.js');
-
+var assetManager = require('./asset-manager.js');
 
 var world;
-
+var assets = new assetManager.AssetManager();
 var bgCanvas = document.getElementById('bg');
 var bgCtx = bgCanvas.getContext('2d');
 var fgCanvas = document.getElementById('fg');
 var fgCtx = fgCanvas.getContext('2d');
 var scale = 30;
 
-
-var parts = new Array();
-var bgObjects = new Array();
-var fgObjects = new Array();
-
 // images
 var eggWidth = 3; //24;
 var eggHeight = 4; //32;
 
-var brownEggImage = misc.loadImage('img/brown-egg.png', eggWidth, eggHeight);
-var whiteEggImage = misc.loadImage('img/white-egg.png', eggWidth, eggHeight);
-var rainbowEggImage = misc.loadImage('img/rainbow-egg.png', eggWidth, eggHeight);
-var goldenEggImage = misc.loadImage('img/golden-egg.png', eggWidth, eggHeight);
-var diamondEggImage = misc.loadImage('img/diamond-egg.png', eggWidth, eggHeight);
+
+assets.setImage('brownEgg', 'img/brown-egg.png', eggWidth, eggHeight);
+assets.setImage('whiteEgg', 'img/white-egg.png', eggWidth, eggHeight);
+assets.setImage('rainbowEgg', 'img/rainbow-egg.png', eggWidth, eggHeight);
+assets.setImage('goldenEgg', 'img/golden-egg.png', eggWidth, eggHeight);
+assets.setImage('diamondEgg', 'img/diamond-egg.png', eggWidth, eggHeight);
+
 
 var henX = 0;
 var henY = 0;
 var henWidth = 48;
 var henHeight = 48;
+
+assets.setImage('hen', 'img/hen.png', 48, 48);
+
 var henImage = misc.loadImage('img/hen.png', henWidth, henHeight);
 
 
@@ -41,11 +41,9 @@ backgroundImage.src = 'img/barn_inside.jpg';
 
 
 // sounds
-var cannonSound = new Audio();
-cannonSound.src = 'aud/cannon.mp3';
+assets.setSound('cannon', 'aud/cannon.mp3');
+assets.setSound('blop', 'aud/blop.mp3');
 
-var blopSound = new Audio();
-blopSound.src = 'aud/blop.mp3';
 
 var maxVelocity = 0;
 
@@ -54,6 +52,26 @@ var numGolden = 0;
 var numRainbow = 0;
 var numRegular = 0;
 
+function randomEgg() {
+    var eggImage;
+
+    var choice = Math.floor(Math.random() * 100) + 1;
+    if (choice >= 1 && choice <= 5) {
+        eggImage = 'diamondEgg';
+        numDiamond++;
+    } else if (choice >= 6 && choice <= 15) {
+        eggImage = 'goldenEgg';
+        numGolden++;
+    } else if (choice >= 16 && choice <= 35) {
+        eggImage = 'rainbowEgg';
+        numRainbow++;
+    } else {
+        eggImage = Math.random() > 0.5 ? 'whiteEgg' : 'brownEgg';
+        numRegular++;
+    }
+
+    return assets.getImage(eggImage);
+}
 
 function init() {
     world = new physics.World(0, 50);
@@ -72,11 +90,11 @@ function init() {
         bgCtx.drawImage(backgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
 
-        brownEggImage = misc.loadImage('img/brown-egg.png', eggWidth * scale, eggHeight * scale);
-        whiteEggImage = misc.loadImage('img/white-egg.png', eggWidth * scale, eggHeight * scale);
-        rainbowEggImage = misc.loadImage('img/rainbow-egg.png', eggWidth * scale, eggHeight * scale);
-        goldenEggImage = misc.loadImage('img/golden-egg.png', eggWidth * scale, eggHeight * scale);
-        diamondEggImage = misc.loadImage('img/diamond-egg.png', eggWidth * scale, eggHeight * scale);
+        // brownEggImage = misc.loadImage('img/brown-egg.png', eggWidth * scale, eggHeight * scale);
+        // whiteEggImage = misc.loadImage('img/white-egg.png', eggWidth * scale, eggHeight * scale);
+        // rainbowEggImage = misc.loadImage('img/rainbow-egg.png', eggWidth * scale, eggHeight * scale);
+        // goldenEggImage = misc.loadImage('img/golden-egg.png', eggWidth * scale, eggHeight * scale);
+        // diamondEggImage = misc.loadImage('img/diamond-egg.png', eggWidth * scale, eggHeight * scale);
     };
 
     window.onresize();
@@ -94,25 +112,8 @@ function init() {
         // lay the egg
 
         var newEgg;
-        var newEggImage;
-
-        var choice = Math.floor(Math.random() * 100) + 1;
-        if (choice >= 1 && choice <= 5) {
-            newEggImage = diamondEggImage; //'img/diamond-egg.png';
-            numDiamond++;
-        } else if (choice >= 6 && choice <= 15) {
-            newEggImage = goldenEggImage; //'img/golden-egg.png';
-            numGolden++;
-        } else if (choice >= 16 && choice <= 35) {
-            newEggImage = rainbowEggImage; //'img/rainbow-egg.png';
-            numRainbow++;
-        } else {
-            //newEggImage = Math.random() > 0.5 ? 'img/white-egg.png' : 'img/brown-egg.png';
-            newEggImage = Math.random() > 0.5 ? whiteEggImage : brownEggImage;
-            numRegular++;
-        }
         //newEgg = new ImageBall(world, newEggImage, 24/scale, 32/scale, henX/scale, henY/scale);
-        newEgg = new physics.CachedImageBall(newEggImage, scale);
+        newEgg = new physics.CachedImageBall(randomEgg(), scale);
         var force = world.addObject(newEgg,
             henX/scale,
             henY/scale,
@@ -121,11 +122,9 @@ function init() {
             misc.randInt(500, 5000) * scale);
 
         if (force.Length() >= maxVelocity * 0.45) {
-            cannonSound.currentTime = 0;
-            cannonSound.play();
+            assets.playSound('cannon');
         } else {
-            blopSound.currentTime = 0;
-            blopSound.play();
+            assets.playSound('blop');
         }
     });
     //setup debug draw
@@ -145,7 +144,7 @@ function update() {
     world.update(fgCtx, fgCanvas.width, fgCanvas.height, scale);
     // optimized
     fgCtx.translate(misc.round(henX), misc.round(henY));
-    fgCtx.drawImage(henImage.canvas, -1 * henWidth, -1 * henHeight);
+    fgCtx.drawImage(assets.getImage('hen').canvas, -1 * henWidth, -1 * henHeight);
     fgCtx.restore();
 }
 
