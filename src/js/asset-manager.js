@@ -26,6 +26,7 @@ export class AssetManager {
         var image = {};
         image.canvas = document.createElement('canvas');
         image.ctx = image.canvas.getContext('2d');
+        image.src = src;
         image.width = width;
         image.height = height;
 
@@ -44,6 +45,23 @@ export class AssetManager {
 
     getImage(key) {
         return key in this.images ? this.images[key] : null;
+    }
+
+    resizeImage(key, width, height) {
+        if (key in this.images) {
+            var image = this.images[key];
+            image.width = width;
+            image.height = height;
+            var i = new Image();
+            i.onload = function() {
+                i.width = width;
+                i.height = height;
+                image.canvas.width = 2*i.width;
+                image.canvas.height = 2*i.height;
+                image.ctx.drawImage(i, 0, 0, image.canvas.width, image.canvas.height);
+            };
+            i.src = image.src;
+        }
     }
 
     rescaleImages(scale) {

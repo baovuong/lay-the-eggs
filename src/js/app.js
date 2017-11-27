@@ -29,9 +29,7 @@ var henY = 0;
 var henWidth = 48;
 var henHeight = 48;
 
-assets.setImage('hen', 'img/hen.png', 48, 48);
-
-var henImage = misc.loadImage('img/hen.png', henWidth, henHeight);
+assets.setImage('hen', 'img/hen.png', henWidth, henHeight);
 
 
 var backgroundImage = new Image();
@@ -89,12 +87,11 @@ function init() {
 
         bgCtx.drawImage(backgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
-
-        // brownEggImage = misc.loadImage('img/brown-egg.png', eggWidth * scale, eggHeight * scale);
-        // whiteEggImage = misc.loadImage('img/white-egg.png', eggWidth * scale, eggHeight * scale);
-        // rainbowEggImage = misc.loadImage('img/rainbow-egg.png', eggWidth * scale, eggHeight * scale);
-        // goldenEggImage = misc.loadImage('img/golden-egg.png', eggWidth * scale, eggHeight * scale);
-        // diamondEggImage = misc.loadImage('img/diamond-egg.png', eggWidth * scale, eggHeight * scale);
+        assets.resizeImage('brownEgg', eggWidth * scale, eggHeight * scale);
+        assets.resizeImage('whiteEgg', eggWidth * scale, eggHeight * scale);
+        assets.resizeImage('rainbowEgg', eggWidth * scale, eggHeight * scale);
+        assets.resizeImage('goldenEgg', eggWidth * scale, eggHeight * scale);
+        assets.resizeImage('diamondEgg', eggWidth * scale, eggHeight * scale);
     };
 
     window.onresize();
