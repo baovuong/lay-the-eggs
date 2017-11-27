@@ -87,11 +87,13 @@ function init() {
 
         bgCtx.drawImage(backgroundImage, 0, 0, bgCanvas.width, bgCanvas.height);
 
-        assets.resizeImage('brownEgg', eggWidth * scale, eggHeight * scale);
-        assets.resizeImage('whiteEgg', eggWidth * scale, eggHeight * scale);
-        assets.resizeImage('rainbowEgg', eggWidth * scale, eggHeight * scale);
-        assets.resizeImage('goldenEgg', eggWidth * scale, eggHeight * scale);
-        assets.resizeImage('diamondEgg', eggWidth * scale, eggHeight * scale);
+        var newEggWidth = eggWidth * scale;
+        var newEggHeight = eggHeight * scale;
+        assets.resizeImage('brownEgg', newEggWidth, newEggHeight);
+        assets.resizeImage('whiteEgg', newEggWidth, newEggHeight);
+        assets.resizeImage('rainbowEgg', newEggWidth, newEggHeight);
+        assets.resizeImage('goldenEgg', newEggWidth, newEggHeight);
+        assets.resizeImage('diamondEgg', newEggWidth, newEggHeight);
     };
 
     window.onresize();
@@ -114,8 +116,8 @@ function init() {
         var force = world.addObject(newEgg,
             henX/scale,
             henY/scale,
-            misc.randInt(10, 0.2 * fgCanvas.width * 2),
-            misc.randInt(5, 0.2 * fgCanvas.height * 0.1),
+            misc.randInt(10, 0.5 * fgCanvas.width * 2),
+            misc.randInt(5, 0.5 * fgCanvas.height * 0.1),
             misc.randInt(500, 5000) * scale);
 
         if (force.Length() >= maxVelocity * 0.45) {
