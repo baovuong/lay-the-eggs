@@ -13,7 +13,8 @@
     "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "box2d-es6": "^1.0.2"
+    "planck-js": "^0.3.10",
+    "yarn": "^1.19.1"
   },
   "scripts": {
     "build": "node_modules/.bin/webpack",

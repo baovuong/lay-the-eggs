@@ -1,20 +1,6 @@
 var misc = require('./misc.js');
 
-import Box2D from 'box2d-es6';
-
-export var b2Vec2 = Box2D.Common.Math.b2Vec2,
-    b2BodyDef = Box2D.Dynamics.b2BodyDef,
-    b2Body = Box2D.Dynamics.b2Body,
-    b2FixtureDef = Box2D.Dynamics.b2FixtureDef,
-    b2Fixture = Box2D.Dynamics.b2Fixture,
-    b2World = Box2D.Dynamics.b2World,
-    b2MassData = Box2D.Collision.Shapes.b2MassData,
-    b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
-    b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
-    b2DebugDraw = Box2D.Dynamics.b2DebugDraw,
-    b2Transform = Box2D.Common.Math.b2Transform,
-    b2Mat22 = Box2D.Common.Math.b2Mat22;
-
+import planck from 'planck-js';
 
 export class ImageBall {
     constructor(src, width, height) {
@@ -26,31 +12,31 @@ export class ImageBall {
     }
 
     attachToWorld(world, x, y) {
-        var bodyDef = new b2BodyDef();
-        bodyDef.type = b2Body.b2_dynamicBody;
+        var bodyDef = new planck.Body();
+        bodyDef.type = planck.Body.DYNAMIC;
         bodyDef.position.x = x;
         bodyDef.position.y = y;
         this.body = world.CreateBody(bodyDef);
 
         // fixtures
-        var fixDef = new b2FixtureDef();
-        fixDef.shape = new b2PolygonShape();
+        var fixDef = new planck.Fixture();
+        fixDef.shape = new planck.Polygon();
         var vectors = new Array();
         var angle = Math.PI / 3;
         var mh = this.height * Math.sin(angle);
         var mw = this.width * Math.cos(angle);
 
-        vectors.push(new b2Vec2(-1 * width, 0));
-        vectors.push(new b2Vec2(-1 * mw, -1 * mh));
+        vectors.push(new planck.Vec2(-1 * width, 0));
+        vectors.push(new planck.Vec2(-1 * mw, -1 * mh));
 
-        vectors.push(new b2Vec2(0, -1 * height));
-        vectors.push(new b2Vec2(mw, -1 * mh));
+        vectors.push(new planck.Vec2(0, -1 * height));
+        vectors.push(new planck.Vec2(mw, -1 * mh));
 
-        vectors.push(new b2Vec2(width, 0));
-        vectors.push(new b2Vec2(mw, mh));
+        vectors.push(new planck.Vec2(width, 0));
+        vectors.push(new planck.Vec2(mw, mh));
 
-        vectors.push(new b2Vec2(0, height));
-        vectors.push(new b2Vec2(-1 * mw, mh));
+        vectors.push(new planck.Vec2(0, height));
+        vectors.push(new planck.Vec2(-1 * mw, mh));
 
         fixDef.shape.SetAsArray(vectors);
         fixDef.density = 1;
@@ -85,15 +71,15 @@ export class CachedImageBall {
 
     attachToWorld(world, x, y) {
         // body
-        var bodyDef = new b2BodyDef();
-        bodyDef.type = b2Body.b2_dynamicBody;
+        var bodyDef = new planck.Body();
+        bodyDef.type = planck.Body.DYNAMIC;
         bodyDef.position.x = x;
         bodyDef.position.y = y;
         this.body = world.CreateBody(bodyDef);
 
         // fixtures
-        var fixDef = new b2FixtureDef();
-        fixDef.shape = new b2PolygonShape();
+        var fixDef = new planck.Fixture();
+        fixDef.shape = new planck.Polygon();
         var vectors = new Array();
         var angle = Math.PI / 3;
 
@@ -103,17 +89,17 @@ export class CachedImageBall {
         var mh = height * Math.sin(angle);
         var mw = width * Math.cos(angle);
 
-        vectors.push(new b2Vec2(-1 * width, 0));
-        vectors.push(new b2Vec2(-1 * mw, -1 * mh));
+        vectors.push(new planck.Vec2(-1 * width, 0));
+        vectors.push(new planck.Vec2(-1 * mw, -1 * mh));
 
-        vectors.push(new b2Vec2(0, -1 * height));
-        vectors.push(new b2Vec2(mw, -1 * mh));
+        vectors.push(new planck.Vec2(0, -1 * height));
+        vectors.push(new planck.Vec2(mw, -1 * mh));
 
-        vectors.push(new b2Vec2(width, 0));
-        vectors.push(new b2Vec2(mw, mh));
+        vectors.push(new planck.Vec2(width, 0));
+        vectors.push(new planck.Vec2(mw, mh));
 
-        vectors.push(new b2Vec2(0, height));
-        vectors.push(new b2Vec2(-1 * mw, mh));
+        vectors.push(new planck.Vec2(0, height));
+        vectors.push(new planck.Vec2(-1 * mw, mh));
 
         fixDef.shape.SetAsArray(vectors);
         fixDef.density = 1;
@@ -148,16 +134,16 @@ export class TestBox {
         this.width = width;
         this.height = height;
         // body
-        var bodyDef = new b2BodyDef();
-        bodyDef.type = b2Body.b2_dynamicBody;
+        var bodyDef = new planck.Body();
+        bodyDef.type = planck.Body.DYNAMIC;
         bodyDef.position.x = x;
         bodyDef.position.y = y;
         this.body = world.CreateBody(bodyDef);
 
         // fixture
-        var shape = new b2PolygonShape();
+        var shape = new planck.Polygon();
         shape.SetAsBox(width, height, 0.5);
-        var fixDef = new b2FixtureDef();
+        var fixDef = new planck.Fixture();
         fixDef.shape = shape;
         fixDef.density = 1;
         this.body.CreateFixture(fixDef);
@@ -192,16 +178,15 @@ export class Platform {
         this.height = height;
 
         // body
-        var bodyDef = new b2BodyDef();
-        bodyDef.type = b2Body.b2_staticBody;
-        bodyDef.position.x = x;
-        bodyDef.position.y = y;
+        var bodyDef = new planck.Body();
+        bodyDef.type = planck.Body.STATIC;
+        bodyDef.setPosition(new planck.Vec2(x, y));
         this.body = world.CreateBody(bodyDef);
 
         // fixture
-        var shape = new b2PolygonShape();
+        var shape = new planck.Polygon();
         shape.SetAsBox(width, height, 0.5);
-        var fixDef = new b2FixtureDef();
+        var fixDef = new planck.Fixture();
         fixDef.shape = shape;
         fixDef.density = 1;
         this.body.CreateFixture(fixDef);
@@ -231,7 +216,7 @@ export class Nest extends Platform {
 
 export class World {
     constructor(gX, gY) {
-        this.body = new b2World(new b2Vec2(gX, gY), true);
+        this.body = new planck.World(new planck.Vec2(gX, gY), true);
         this.bgObjects = new Array();
         this.fgObjects = new Array();
     }
@@ -240,7 +225,7 @@ export class World {
         this.fgObjects.push(object);
         object.attachToWorld(this.body, x, y);
 
-        var force = new b2Vec2(fx, fy);
+        var force = new planck.Vec2(fx, fy);
         object.body.ApplyImpulse(force, object.body.GetWorldCenter());
         object.body.ApplyTorque(t);
 

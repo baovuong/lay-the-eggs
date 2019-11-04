@@ -1,5 +1,7 @@
 /* import styles */
 require('../css/app.css');
+
+import planck from 'planck-js';
 var misc = require('./misc.js');
 var physics = require('./physics.js');
 
@@ -65,7 +67,7 @@ function init() {
         bgCanvas.height = misc.round(window.innerHeight * 0.85);
         fgCanvas.width = bgCanvas.width;
         fgCanvas.height = bgCanvas.height;
-        maxVelocity = new physics.b2Vec2(0.2 * fgCanvas.width * 2, 0.2 * fgCanvas.height * 0.1).Length();
+        maxVelocity = new planck.Vec2(0.2 * fgCanvas.width * 2, 0.2 * fgCanvas.height * 0.1).length();
 
         world.refresh(scale, bgCanvas.width, bgCanvas.height);
 
