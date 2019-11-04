@@ -12,11 +12,11 @@ export class ImageBall {
     }
 
     attachToWorld(world, x, y) {
-        var bodyDef = new planck.Body();
-        bodyDef.type = planck.Body.DYNAMIC;
-        bodyDef.position.x = x;
-        bodyDef.position.y = y;
-        this.body = world.CreateBody(bodyDef);
+        this.body = world.createBody().setDynamic().setPosition(new planck.Vec2(x, y));
+        // bodyDef.type = planck.Body.DYNAMIC;
+        // bodyDef.position.x = x;
+        // bodyDef.position.y = y;
+        // this.body = world.CreateBody(bodyDef);
 
         // fixtures
         var fixDef = new planck.Fixture();
@@ -71,11 +71,11 @@ export class CachedImageBall {
 
     attachToWorld(world, x, y) {
         // body
-        var bodyDef = new planck.Body();
-        bodyDef.type = planck.Body.DYNAMIC;
-        bodyDef.position.x = x;
-        bodyDef.position.y = y;
-        this.body = world.CreateBody(bodyDef);
+        this.body = world.createBody().setDynamic().setPosition(new planck.Vec2(x, y));
+        // bodyDef.type = planck.Body.DYNAMIC;
+        // bodyDef.position.x = x;
+        // bodyDef.position.y = y;
+        // this.body = world.CreateBody(bodyDef);
 
         // fixtures
         var fixDef = new planck.Fixture();
@@ -178,18 +178,21 @@ export class Platform {
         this.height = height;
 
         // body
-        var bodyDef = new planck.Body();
-        bodyDef.type = planck.Body.STATIC;
-        bodyDef.setPosition(new planck.Vec2(x, y));
-        this.body = world.CreateBody(bodyDef);
+        this.body = world.createBody().setStatic();
+        this.body.setPosition(new planck.Vec2(x, y));
+        
+        // var bodyDef = new planck.Body();
+        // bodyDef.type = planck.Body.STATIC;
+        // bodyDef.setPosition(new planck.Vec2(x, y));
 
         // fixture
-        var shape = new planck.Polygon();
-        shape.SetAsBox(width, height, 0.5);
-        var fixDef = new planck.Fixture();
-        fixDef.shape = shape;
-        fixDef.density = 1;
-        this.body.CreateFixture(fixDef);
+        var shape = new planck.Box(width, height);
+
+        // shape.setAsBox(width, height, 0.5);
+        var fixDef = new planck.Fixture(this.body, shape);
+        fixDef.setDensity(1);
+        // fixDef.density = 1;
+        // this.body.CreateFixture(fixDef);
     }
 
     render(ctx, scale) {
@@ -251,12 +254,12 @@ export class World {
     update(ctx, width, height, scale) {
         ctx.clearRect(0, 0, width, height);
 
-        this.body.Step(1 / 60, 10, 10);
+        this.body.step(1 / 60, 10, 10);
         //world.DrawDebugData();
         for (var i = 0; i < this.fgObjects.length; i++) {
             this.fgObjects[i].render(ctx, scale);
         }
-        this.body.ClearForces();
+        this.body.clearForces();
 
         // drawing the chicken
         ctx.save();
