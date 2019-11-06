@@ -122,7 +122,7 @@ function init() {
             misc.randInt(5, 0.2 * fgCanvas.height * 0.1),
             misc.randInt(500, 5000) * scale);
 
-        if (force.Length() >= maxVelocity * 0.45) {
+        if (force.length >= maxVelocity * 0.45) {
             cannonSound.currentTime = 0;
             cannonSound.play();
         } else {

@@ -71,44 +71,36 @@ export class CachedImageBall {
 
     attachToWorld(world, x, y) {
         // body
-        this.body = world.createBody().setDynamic().setPosition(new planck.Vec2(x, y));
-        // bodyDef.type = planck.Body.DYNAMIC;
-        // bodyDef.position.x = x;
-        // bodyDef.position.y = y;
-        // this.body = world.CreateBody(bodyDef);
+        this.body = world.createBody();
+        
+        this.body.setDynamic();
+        this.body.setPosition(new planck.Vec2(x, y));
 
         // fixtures
-        var fixDef = new planck.Fixture();
-        fixDef.shape = new planck.Polygon();
-        var vectors = new Array();
-        var angle = Math.PI / 3;
 
         var width = this.image.canvas.width / (this.scale * 2);
         var height = this.image.canvas.height / (this.scale * 2);
-
+        
+        var angle = Math.PI / 3;
         var mh = height * Math.sin(angle);
         var mw = width * Math.cos(angle);
 
-        vectors.push(new planck.Vec2(-1 * width, 0));
-        vectors.push(new planck.Vec2(-1 * mw, -1 * mh));
-
-        vectors.push(new planck.Vec2(0, -1 * height));
-        vectors.push(new planck.Vec2(mw, -1 * mh));
-
-        vectors.push(new planck.Vec2(width, 0));
-        vectors.push(new planck.Vec2(mw, mh));
-
-        vectors.push(new planck.Vec2(0, height));
-        vectors.push(new planck.Vec2(-1 * mw, mh));
-
-        fixDef.shape.SetAsArray(vectors);
-        fixDef.density = 1;
-        this.body.CreateFixture(fixDef);
+        this.body.createFixture(planck.Chain([
+            planck.Vec2(-1 * width, 0),
+            planck.Vec2(-1 * mw, -1 * mh),
+            planck.Vec2(0, -1 * height),
+            planck.Vec2(mw, -1 * mh),
+            planck.Vec2(width, 0),
+            planck.Vec2(mw, mh),
+            planck.Vec2(0, height),
+            planck.Vec2(-1 * mw, mh)
+        ]), 1);
     }
 
     render(ctx, scale) {
         if (this.body != null) {
-            var pos = this.body.GetPosition();
+            var pos = this.body.getPosition();
+            console.log('(' + pos.x + ', ' + pos.y + ')');
             //this.image.height = this.height*scale;
             //this.image.width = this.width*scale;
             ctx.save();
@@ -117,7 +109,7 @@ export class CachedImageBall {
             ctx.translate(misc.round(pos.x * scale), misc.round(pos.y * scale));
 
 
-            ctx.rotate(this.body.GetAngle());
+            ctx.rotate(this.body.getAngle());
             //ctx.drawImage(this.image.canvas,0, 0);
             //ctx.fillRect(0, 0, this.image.canvas.width, this.image.canvas.height);
 
@@ -229,8 +221,8 @@ export class World {
         object.attachToWorld(this.body, x, y);
 
         var force = new planck.Vec2(fx, fy);
-        object.body.ApplyImpulse(force, object.body.GetWorldCenter());
-        object.body.ApplyTorque(t);
+        object.body.applyLinearImpulse(force, object.body.getWorldCenter());
+        object.body.applyTorque(t);
 
         return force;
     }
@@ -241,7 +233,7 @@ export class World {
 
     refresh(scale, width, height) {
         for (var i = 0; i < this.bgObjects.length; i++) {
-            this.bgObjects[i].body.GetWorld().DestroyBody(this.bgObjects[i].body);
+            this.bgObjects[i].body.getWorld().destroyBody(this.bgObjects[i].body);
         }
         this.bgObjects = new Array();
 
